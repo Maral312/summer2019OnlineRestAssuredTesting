@@ -1,0 +1,223 @@
+Today 01/28/2020
+
+	Agenda:
+		-let's finish scenarios from previous class
+		-JSON
+		-Gson
+		-POJO
+		-Serialization
+		-De-serialization
+		-POST
+		-PUT
+		-DELETE
+
+#################################################
+POSTMAN collection for cybertektraining.com: https://www.getpostman.com/collections/6b948470664b6261eaf9
+
+Just go to postman -> import --> link --> insert that link and you will get collection of endpoints. This collection represents hat you can do with this web service  and how to do it.
+
+##############################################
+
+JSON -> JavaScript Object Notation.
+
+	JSON is based on JavaScript. The main difference is that JSON is not really stands for any scripting. It contains states but not methods. It can have different property types like: String, Boolean, Integer. It can have Arrays and Objects. JSON it's a data representational language, not programming language. JavaScript natively supports JSON, because obviously JSON is based on JavaScript. JSON is used for transferring data between server and client, client and server, server and server, etc...
+
+	-JSON is very light weight
+	-JSON is language independent
+	-JSON is easy to read and parse
+	-JSON is plain text so it's human readable
+
+Most of the languages have libraries that can parse from JSON to object (De-serialization) or from object to JSON (Serialization).
+
+In java, one of the most popular libraries for is is Gson.
+
+Gson - it's a library, that helps to convert java objects into JSON, and opposite.
+
+class Person {
+	private String name; <- state(or property), that describes an object.
+}
+{} - it's an object
+[] - it's array
+
+JSON looks like key=value pair file
+//one employee
+{
+	"firstName": "John"
+	"lastName": "Smith"
+	"age": 45
+	"married": true
+}
+
+
+
+array of employees
+if you need to get first employee, we can say employees[0]
+if you need his name: employees[0].firstName
+employees [
+	{
+		"firstName": "John"
+		"lastName": "Smith"
+		"age": 45
+		"married": true
+	},
+	{
+		"firstName": "Greg"
+		"lastName": "Strong"
+		"age": 30
+		"married": false
+	}
+]
+
+there are could be nested JSON objects:
+
+employees [
+	{
+		"firstName": "John"
+		"lastName": "Smith"
+		"age": 45
+		"married": true
+		"address": {
+			"zipcode": 22012
+			"street": "7921 Jones Branch Drive"
+		}
+	},
+
+]
+
+address is an object inside employee object.
+
+To get a zip code: employees[0].address.zipcode
+
+How object looks like in java?
+
+- first of all object in java are based on some class, and they can have properties and behavior.
+//when you combine couple custom classes it calls composition.
+
+public class Employee{
+	private String firstName;
+	private String lastName;
+	private int age;
+	private boolean married;
+	private Address address;
+}
+
+public class Address{
+	private int zipcode;
+	private String street;
+}
+
+
+Employee e = new Employee();
+
+Employee[] employees = new Employee[2]
+e - it's a POJO. Plain Old Java Object
+
+Every language has their own library(libraries) to perform Serialization and Deserialization, In java we have Gson, Jackson, etc..
+
+RestAssured supports all of them, but common practice is to use Gson.
+
+Serialization and Deserialization not automatically means pojo->json json->pojo.
+
+It can be anything, the main idea is convert pojo into stream of bytes and opposite.
+Mapping looks like this:
+JSON 		POJO
+firstName = firstName
+age       = age
+address   = address
+DOB       = ???
+
+BREAK till 2:05
+
+ POJO it's a Japanese rice cake (no it's not, don't say this on the interview)
+
+
+ # ## # ####
+
+
+ We need to add gson dependency:
+
+*Interview Question: We are sending a request to the server and getting back response as a java object, How can you test the response???
+
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>2.8.6</version>
+</dependency>
+
+
+A JavaBean/POJO is just a standard
+
+All properties private (use getters/setters)
+A public no-argument constructor
+Implements Serializable.
+That's it. It's just a convention. Lots of libraries depend on it though.
+
+With respect to Serializable, from the API documentation:
+
+Serializability of a class is enabled by the class implementing the java.io.Serializable interface. Classes that do not implement this interface will not have any of their state serialized or deserialized. All subtypes of a serializable class are themselves serializable. The serialization interface has no methods or fields and serves only to identify the semantics of being serializable.
+
+
+
+#Task
+
+Create POJO for Location:
+
+public class Location{
+	@SerializedName("location_id")
+	private int locationId;
+
+    "location_id": 2900,
+    "street_address": "20 Rue des Corps-Saints",
+    "postal_code": "1730",
+    "city": "Geneva",
+    "state_province": "Geneve",
+    "country_id": "CH",
+
+
+}
+
+Write 2 tests:
+	#1 convert JSON object into your custom Location POJO
+	#2 convert JSON payload of jobs into your custom collection of Location class. List<Location>
+
+	Same thing like we did with Job class
+
+	* follow java naming conventions!
+
+
+
+PUT - to update existing record
+POST - add new record
+
+{
+  "admissionNo": "1234",
+  "batch": 12,
+  "birthDate": "01/01/1890",
+  "company": {
+    "address": {
+      "city": "McLean",
+      "state": "Virginia",
+      "street": "7925 Jones Branch Dr",
+      "zipCode": 22102
+    },
+    "companyName": "Cybertek",
+    "startDate": "02/02/2020",
+    "title": "SDET"
+  },
+  "contact": {
+    "emailAddress": "james_bond@gmail.com",
+    "phone": "240-123-1231",
+    "premanentAddress": "7925 Jones Branch Dr"
+  },
+  "firstName": "James",
+  "gender": "Males",
+  "joinDate": "01/01/3321",
+  "lastName": "Bond",
+  "major": "CS",
+  "password": "1234",
+  "section": "101010",
+  "subject": "Math"
+}
+
+
+
